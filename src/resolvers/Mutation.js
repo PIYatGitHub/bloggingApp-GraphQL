@@ -20,8 +20,18 @@ const Mutation = {
       where: {id: args.id}
     }, info);
   },
-  async createPost(parent, args, {prisma, pubsub}, info){
-
+  async createPost(parent, args, {prisma}, info){
+    return prisma.mutation.createPost({
+      data: {
+        title: args.data.title,
+        body: args.data.body,
+        published: args.data.published,
+        author:{
+          connect: {
+            id:args.data.author
+          }
+        }
+      }}, info);
   },
   async updatePost(parent, args, {prisma, pubsub}, info){
 

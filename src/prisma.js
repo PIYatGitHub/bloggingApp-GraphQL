@@ -6,6 +6,12 @@ const prisma = new Prisma({
 });
 
 // const createPostForUser = async (authorID, data)=> {
+//   const userExists = await prisma.exists.User({
+//    id: authorID
+//   });
+//
+//   if (!userExists) throw new Error('User not found');
+//
 //   const post = await prisma.mutation.createPost({
 //     data:{...data,
 //     author:{
@@ -14,48 +20,46 @@ const prisma = new Prisma({
 //         }
 //       }
 //     }
-//   }, '{ id }');
+//   }, '{ id author { id name email posts { id title published } } }');
 //
-//   const user = await prisma.query.user({
-//       where: {
-//         id:authorID
-//       }
-//   }, '{ id name email posts {id title published} }');
-//
-//   return user
+//   return post.author
 // };
 //
 // createPostForUser('cjy2wu4e600nc0986pudngywm',{
-//     title: "Great reads",
+//     title: "Workable",
 //     body: "Idiot - Leo Tolstoy",
+//     published: false
+// }).then((user)=>{
+//   console.log(JSON.stringify(user, undefined, 2));
+// }).catch((err)=>{
+//   console.log(err);
+// });
+
+//
+// const updatePostForUser = async (postID, data)=> {
+//    const postExists = await prisma.exists.Post({
+//    id: postID
+//   });
+//
+//   if (!postExists) throw new Error('Post not found');
+//
+//   const post = await prisma.mutation.updatePost({
+//     where:{
+//       id:postID
+//     }, data
+//   }, '{ author {id email posts {id title body published}} }');
+//
+//   return post.author;
+// };
+//
+// updatePostForUser('cjy2wuxr400o2098654aiv6pu',{
+//     body: "THIS IS A FAKE UPDATE...",
 //     published: true
 // }).then((user)=>{
 //   console.log(JSON.stringify(user, undefined, 2));
+// }).catch((err)=>{
+//   console.log(err);
 // });
-
-
-const updatePostForUser = async (postID, data)=> {
-  const post = await prisma.mutation.updatePost({
-    where:{
-      id:postID
-    }, data
-  }, '{ author {id} }');
-
-  const user = await prisma.query.user({
-      where: {
-        id:post.author.id
-      }
-  }, '{ email posts {id title body published} }');
-
-  return user
-};
-
-updatePostForUser('cjy2wuxr400o2098654aiv6pu',{
-    body: "THIS IS A FAKE UPDATE...",
-    published: true
-}).then((user)=>{
-  console.log(JSON.stringify(user, undefined, 2));
-});
 
 
 // prisma.mutation.createPost({
@@ -90,5 +94,7 @@ updatePostForUser('cjy2wuxr400o2098654aiv6pu',{
 //   }).then((data) => {
 //   console.log(JSON.stringify(data, undefined, 4));
 // });
+
+//EXISTS METHODS
 
 

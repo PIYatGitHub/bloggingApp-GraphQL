@@ -48,14 +48,32 @@ const Mutation = {
       where: {id: args.id}
     }, info);
   },
-  async createComment(parent, args, {prisma, pubsub}, info){
-
+  async createComment(parent, args, {prisma}, info){
+    return prisma.mutation.createComment({
+      data: {
+        text: args.data.text,
+        author:{
+          connect: {id:args.data.author}
+        },
+        post:{
+          connect: {id:args.data.post}
+        }
+      }}, info);
   },
-  async updateComment(parent, args, {prisma, pubsub}, info){
-
+  async updateComment(parent, args, {prisma}, info){
+    const commentExists = await prisma.exists.Comment({id:args.id});
+    if (!commentExists) throw new Error('No such comment');
+    return prisma.mutation.updateComment({
+      where: {id: args.id},
+      data:args.data
+    }, info);
   },
-  async deleteComment(parent, args, {prisma, pubsub}, info){
-
+  async deleteComment(parent, args, {prisma}, info){
+    const commentExists = await prisma.exists.Comment({id:args.id});
+    if (!commentExists) throw new Error('No such comment');
+    return prisma.mutation.deleteComment({
+      where: {id: args.id}
+    }, info);
   }
 };
 export {Mutation as default}

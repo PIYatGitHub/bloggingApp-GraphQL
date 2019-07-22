@@ -19,6 +19,9 @@ const Mutation = {
       token: jwt.sign({userID:user.id}, 'ThisIsULTRAsecreT')
     }
     },
+  async login (parent, args, {prisma}, info){
+
+  },
   async updateUser(parent, args, {prisma}, info) {
     const userExists = await
     prisma.exists.User({id: args.id});

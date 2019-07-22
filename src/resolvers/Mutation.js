@@ -26,7 +26,10 @@ const Mutation = {
     if (!user) throw new Error('Unable to login');
     const match = await bcrypt.compare(args.data.password, user.password);
     if (!match) throw new Error('Unable to login');
-
+    return {
+      user,
+      token: jwt.sign({userID:user.id}, 'ThisIsULTRAsecreT')
+    }
   },
   async updateUser(parent, args, {prisma}, info) {
     const userExists = await

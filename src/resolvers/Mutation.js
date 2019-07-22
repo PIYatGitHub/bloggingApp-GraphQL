@@ -20,6 +20,12 @@ const Mutation = {
     }
     },
   async login (parent, args, {prisma}, info){
+    const user = await prisma.query.user({
+      where: {email:args.data.email}
+    });
+    if (!user) throw new Error('Unable to login');
+    const match = await bcrypt.compare(args.data.password, user.password);
+    if (!match) throw new Error('Unable to login');
 
   },
   async updateUser(parent, args, {prisma}, info) {

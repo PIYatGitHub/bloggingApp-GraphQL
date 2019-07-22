@@ -67,9 +67,13 @@ const Mutation = {
       data: args.data
     }, info);
   },
-  async deletePost(parent, args, {prisma}, info) {
-    const postExists = await prisma.exists.Post({id: args.id});
-    if (!postExists) throw new Error('No such post');
+  async deletePost(parent, args, {prisma, request}, info) {
+    const userID = getUserID(request);
+    const postExists = await prisma.exists.Post({
+      id: args.id,
+      author: {id: userID}
+    });
+    if (!postExists) throw new Error('Unable to find post');
     return prisma.mutation.deletePost({
       where: {id: args.id}
     }, info);

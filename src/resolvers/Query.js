@@ -37,17 +37,20 @@ const Query = {
     return posts[0];
   },
   posts(parent, args, {prisma}, info) {
-    const opArgs={};
+    const opArgs={
+      where:{published:true}
+    };
     if (args.query) {
-      opArgs.where = {
-        OR:[{
+      opArgs.where.OR = [{
           title_contains: args.query
         }, {
           body_contains: args.query
         }]
-      }
     }
     return prisma.query.posts(opArgs, info);
+  },
+  myPosts(parent, args, {prisma, request}, info){
+
   },
   comments(parent, args, {prisma}, info) {
     return prisma.query.comments(null, info);

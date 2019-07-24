@@ -96,17 +96,25 @@ const Mutation = {
       }
     }, info);
   },
-  async updateComment(parent, args, {prisma}, info) {
-    const commentExists = await prisma.exists.Comment({id: args.id});
-    if (!commentExists) throw new Error('No such comment');
+  async updateComment(parent, args, {prisma, request}, info) {
+    const userID = getUserID(request);
+    const commentExists = await prisma.exists.Comment({
+      id: args.id,
+      author: {id:userID}
+    });
+    if (!commentExists) throw new Error('Unable to find the comment');
     return prisma.mutation.updateComment({
       where: {id: args.id},
       data: args.data
     }, info);
   },
-  async deleteComment(parent, args, {prisma}, info) {
-    const commentExists = await prisma.exists.Comment({id: args.id});
-    if (!commentExists) throw new Error('No such comment');
+  async deleteComment(parent, args, {prisma, request}, info) {
+    const userID = getUserID(request);
+    const commentExists = await prisma.exists.Comment({
+      id: args.id,
+      author: {id:userID}
+    });
+    if (!commentExists) throw new Error('Unable to find the comment');
     return prisma.mutation.deleteComment({
       where: {id: args.id}
     }, info);

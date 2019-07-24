@@ -16,7 +16,7 @@ const Mutation = {
     });
     return {
       user,
-      token: jwt.sign({userID: user.id}, 'ThisIsULTRAsecreT')
+      token: jwt.sign({userID: user.id}, 'ThisIsULTRAsecreT', {expiresIn:'8h'})
     }
   },
   async login(parent, args, {prisma}, info) {
@@ -30,7 +30,7 @@ const Mutation = {
     if (!match) throw new Error('Unable to login');
     return {
       user,
-      token: jwt.sign({userID: user.id}, 'ThisIsULTRAsecreT')
+      token: jwt.sign({userID: user.id}, 'ThisIsULTRAsecreT', {expiresIn:'8h'})
     }
   },
   async updateUser(parent, args, {prisma, request}, info) {

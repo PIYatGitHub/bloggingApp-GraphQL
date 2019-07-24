@@ -59,9 +59,13 @@ const Mutation = {
       }
     }, info);
   },
-  async updatePost(parent, args, {prisma}, info) {
-    const postExists = await prisma.exists.Post({id: args.id});
-    if (!postExists) throw new Error('No such post');
+  async updatePost(parent, args, {prisma, request}, info) {
+    const userID = getUserID(request);
+    const postExists = await prisma.exists.Post({
+      id: args.id,
+      author:{id:userID}
+    });
+    if (!postExists) throw new Error('Could not update post!');
     return prisma.mutation.updatePost({
       where: {id: args.id},
       data: args.data

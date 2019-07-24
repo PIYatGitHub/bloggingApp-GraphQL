@@ -52,7 +52,6 @@ input UpdatePostInput {
 
 input CreateCommentInput {
     text: String!
-    author: String!
     post: String!
 }
 

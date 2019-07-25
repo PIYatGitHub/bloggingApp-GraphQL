@@ -16,7 +16,7 @@ const Mutation = {
     });
     return {
       user,
-      token: generateToken(user.id, 'ThisIsULTRAsecreT', '8h')
+      token: generateToken(user.id, '8h')
     }
   },
   async login(parent, args, {prisma}, info) {
@@ -30,7 +30,7 @@ const Mutation = {
     if (!match) throw new Error('Unable to login');
     return {
       user,
-      token: generateToken(user.id, 'ThisIsULTRAsecreT', '8h')
+      token: generateToken(user.id, '8h')
     }
   },
   async updateUser(parent, args, {prisma, request}, info) {

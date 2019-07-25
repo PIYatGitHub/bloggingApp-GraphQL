@@ -4,7 +4,7 @@ const getUserID = (req, requireAuth = true) => {
   const header = req.request ? req.request.headers.authorization : req.connection.context.Authorization;
   if (header) {
     const token = header.replace('Bearer ','');
-    const dec = jwt.verify(token, 'ThisIsULTRAsecreT');
+    const dec = jwt.verify(token, process.env.JWT_SECRET);
     return dec.userID;
   }
   if (requireAuth)  throw new Error('Authentication required');

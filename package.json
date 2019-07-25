@@ -4,7 +4,8 @@
   "description": "An intro to the wonderful world of GraphQL",
   "main": "index.js",
   "scripts": {
-    "start": "",
+    "start": "env-cmd -f ./config/prod.env node dist/index.js",
+    "heroku-postbuild": "babel src --out-dir dist --copy-files",
     "dev": "env-cmd -f ./config/dev.env nodemon src/index.js --exec babel-node -e graphql,js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "get-schema": "graphql get-schema -p prisma"
@@ -15,6 +16,7 @@
   "author": "Peter Iv. Y.",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",

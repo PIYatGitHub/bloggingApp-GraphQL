@@ -1,8 +1,8 @@
 import 'cross-fetch/polyfill'
 import prisma from '../src/prisma'
-import seedDB, {userOne, postOne, postTwo} from './utils/seedDB'
+import seedDB, {userOne, postOne, postTwo, commentOne} from './utils/seedDB'
 import getClient from './utils/getClient'
-import {updatePost, createPost, deletePost, getPosts, myPosts} from './utils/operations'
+import {updatePost, createPost, deletePost, getPosts, myPosts, subscribePosts} from './utils/operations'
 const client = getClient();
 beforeEach(seedDB);
 
@@ -60,4 +60,14 @@ test('Should be able to delete own post', async ()=> {
   await client.mutate({mutation:deletePost, variables});
   const exists = await prisma.exists.Post({id:postTwo.post.id});
   expect(exists).toBe(false);
+});
+
+test('Should be able to subscribe to a post', async (done)=> {
+  client.subscribe({query:subscribePosts}).subscribe({
+    next(response){
+      expect(response.data.post.mutation).toBe('DELETED');
+      done();
+    }
+  });
+  await prisma.mutation.deletePost({where:{id:postOne.post.id}});
 });

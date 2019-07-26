@@ -1,12 +1,13 @@
 import 'cross-fetch/polyfill'
 import {gql} from 'apollo-boost'
 import prisma from '../src/prisma'
-import seedDB from './utils/seedDB'
+import seedDB,{userOne} from './utils/seedDB'
 import getClient from './utils/getClient'
 
 const client = getClient();
 beforeEach(seedDB);
 
+//without auth
 test('Should create a new user', async () => {
     const createUser = gql`
         mutation {
@@ -47,9 +48,7 @@ test('Should not create a new user with short pword', async () => {
           }
       }
   `;
-
   await expect((client.mutate({mutation:createUser}))).rejects.toThrow()
-
 });
 
 test('Should create a public author profiles', async () => {
@@ -68,8 +67,6 @@ test('Should create a public author profiles', async () => {
     expect(response.data.users[0].name).toBe('Jen');
 });
 
-
-
 test('Should not login with bad credentials', async () => {
   const login = gql`
       mutation {
@@ -83,4 +80,23 @@ test('Should not login with bad credentials', async () => {
   `;
 
   await expect((client.mutate({mutation:login}))).rejects.toThrow()
+});
+
+//with auth
+test('Should fetch user profile', async ()=> {
+   const client = getClient(userOne.jwt);
+   const getProfile = gql`
+     query {
+         me{
+             id
+             name
+             email
+         }
+     }
+   `;
+   const {data} = await client.query({query:getProfile});
+   expect(data.me.id).toBe(userOne.user.id);
+   expect(data.me.name).toBe(userOne.user.name);
+   expect(data.me.email).toBe(userOne.user.email);
+
 });

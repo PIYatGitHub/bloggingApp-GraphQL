@@ -38,9 +38,9 @@ test('Should not create a new user with short pword', async () => {
   await expect((client.mutate({mutation:createUser, variables}))).rejects.toThrow()
 });
 
-test('Should create a public author profiles', async () => {
+test('Should get all public author profiles', async () => {
     const response = await client.query({query:getUsers});
-    expect(response.data.users.length).toBe(1);
+    expect(response.data.users.length).toBe(2);
     expect(response.data.users[0].email).toBe(null);
     expect(response.data.users[0].name).toBe('Jen');
 });

@@ -25,3 +25,4 @@ test('Should not be able to delete other peoples comments', async ()=> {
     client.mutate({mutation:deleteComment, variables})
   ).rejects.toThrow()
 });
+

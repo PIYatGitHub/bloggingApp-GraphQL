@@ -34,7 +34,7 @@ const seedDB = async () => {
         }
       }
     }
-  })
+  });
 };
 
 export {seedDB as default}

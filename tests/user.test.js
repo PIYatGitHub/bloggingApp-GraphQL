@@ -1,47 +1,13 @@
 import 'cross-fetch/polyfill'
 import ApolloBoost, { gql } from 'apollo-boost'
-import bcrypt from 'bcryptjs'
 import prisma from '../src/prisma'
+import seedDB from './utils/seedDB'
 
 const client = new ApolloBoost({
     uri: 'http://localhost:4000'
 });
 
-beforeEach(async () => {
-    await prisma.mutation.deleteManyPosts();
-    await prisma.mutation.deleteManyUsers();
-    const user = await prisma.mutation.createUser({
-        data: {
-            name: 'Jen',
-            email: 'jen@example.com',
-            password: bcrypt.hashSync('Red098!@#$')
-        }
-    });
-    await prisma.mutation.createPost({
-        data: {
-            title: 'My published post',
-            body: '',
-            published: true,
-            author: {
-                connect: {
-                    id: user.id
-                }
-            }
-        }
-    });
-    await prisma.mutation.createPost({
-        data: {
-            title: 'My draft post',
-            body: '',
-            published: false,
-            author: {
-                connect: {
-                    id: user.id
-                }
-            }
-        }
-    })
-});
+beforeEach(seedDB);
 
 test('Should create a new user', async () => {
     const createUser = gql`
@@ -69,7 +35,6 @@ test('Should create a new user', async () => {
     expect(exists).toBe(true);
 });
 
-
 test('Should not create a new user with short pword', async () => {
   const createUser = gql`
       mutation {
@@ -89,7 +54,6 @@ test('Should not create a new user with short pword', async () => {
 
 });
 
-
 test('Should create a public author profiles', async () => {
     const getUsers = gql`
       query {
@@ -106,21 +70,7 @@ test('Should create a public author profiles', async () => {
     expect(response.data.users[0].name).toBe('Jen');
 });
 
-test('Should get the published posts', async () => {
-  const getPosts = gql`
-      query {
-          posts{
-              id
-              title
-              body
-              published
-          }
-      }
-  `;
-  const response = await client.query({query:getPosts});
-  expect(response.data.posts.length).toBe(1);
-  expect(response.data.posts[0].published).toBe(true);
-});
+
 
 test('Should not login with bad credentials', async () => {
   const login = gql`

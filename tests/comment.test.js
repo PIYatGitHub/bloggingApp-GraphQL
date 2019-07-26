@@ -1,8 +1,8 @@
 import 'cross-fetch/polyfill'
 import prisma from '../src/prisma'
-import seedDB, {userOne, userTwo, commentOne, commentTwo} from './utils/seedDB'
+import seedDB, {postOne, userOne, userTwo, commentOne, commentTwo} from './utils/seedDB'
 import getClient from './utils/getClient'
-import {deleteComment} from './utils/operations'
+import {deleteComment, subscribeComments} from './utils/operations'
 const client = getClient();
 beforeEach(seedDB);
 
@@ -26,3 +26,15 @@ test('Should not be able to delete other peoples comments', async ()=> {
   ).rejects.toThrow()
 });
 
+test('Should be able to subscribe to a posts comments', async (done)=> {
+  const variables = {
+    postID:postOne.post.id
+  };
+  client.subscribe({query:subscribeComments, variables}).subscribe({
+    next(response){
+      expect(response.data.comment.mutation).toBe('DELETED');
+      done();
+    }
+  });
+  await prisma.mutation.deleteComment({where: { id:commentOne.comment.id }});
+});

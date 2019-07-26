@@ -7,6 +7,16 @@ import {createUser, login, getProfile, getUsers}from'./utils/operations'
 const client = getClient();
 beforeEach(seedDB);
 
+//TODO:
+// Should not signup a user with email that is already in use
+
+// Should login and provide authentication token
+
+// Should reject me query without authentication
+
+// Should hide emails when fetching list of users
+
+
 //without auth
 test('Should create a new user', async () => {
     const variables= {

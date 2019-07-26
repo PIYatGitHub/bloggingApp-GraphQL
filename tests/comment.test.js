@@ -5,6 +5,20 @@ import getClient from './utils/getClient'
 import {deleteComment, subscribeComments} from './utils/operations'
 const client = getClient();
 beforeEach(seedDB);
+//TODO
+// Should fetch post comments
+
+// Should create a new comment
+
+// Should not create comment on draft post
+
+// Should update comment
+
+// Should not update another users comment
+
+// Should not delete another users comment
+
+// Should require authentication to create a comment (could add for update and delete too)
 
 test('Should be able to delete own comment', async ()=> {
   const client = getClient(userOne.jwt);

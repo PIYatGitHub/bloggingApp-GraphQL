@@ -6,6 +6,19 @@ import {updatePost, createPost, deletePost, getPosts, myPosts, subscribePosts} f
 const client = getClient();
 beforeEach(seedDB);
 
+//TODO
+// Should not be able to update another users post
+
+// Should not be able to delete another users post
+
+// Should require authentication to create a post (could add for update and delete too)
+
+// Should fetch published post by id
+
+// Should fetch own post by id
+
+// Should not fetch draft post from other user
+
 //without auth
 test('Should expose the published posts', async () => {
   const response = await client.query({query:getPosts});

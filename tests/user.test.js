@@ -69,6 +69,27 @@ test('Should create a new user', async () => {
     expect(exists).toBe(true);
 });
 
+
+test('Should not create a new user with short pword', async () => {
+  const createUser = gql`
+      mutation {
+          createUser(
+              data: {
+                  name: "Andrew",
+                  email: "andrew@example.com",
+                  password: "123"
+              }
+          ){
+              token
+          }
+      }
+  `;
+
+  await expect((client.mutate({mutation:createUser}))).rejects.toThrow()
+
+});
+
+
 test('Should create a public author profiles', async () => {
     const getUsers = gql`
       query {
@@ -99,4 +120,19 @@ test('Should get the published posts', async () => {
   const response = await client.query({query:getPosts});
   expect(response.data.posts.length).toBe(1);
   expect(response.data.posts[0].published).toBe(true);
+});
+
+test('Should not login with bad credentials', async () => {
+  const login = gql`
+      mutation {
+          login (data:{
+              email: "peshe@1.com",
+              password: "12ie8yfq8oy8qeyfqfhbsjkgs"
+          }){
+              token
+          }
+      }
+  `;
+
+  await expect((client.mutate({mutation:login}))).rejects.toThrow()
 });
